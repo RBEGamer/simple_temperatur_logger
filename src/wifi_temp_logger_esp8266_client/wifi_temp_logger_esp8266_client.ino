@@ -5,14 +5,15 @@
 
 #include "DHT.h"
 #define DHTPIN D2     // what digital pin we're connected to
-#define DHTTYPE DHT22   // DHT 22  (AM2302), AM2321
+#define DHTTYPE DHT22
 
+const String server_token = "1337";
+const String server_base_url = "http://marcelochsendorf.com/temp_logger/insert_sensor_reading.php"; //PARAMETERS WILL BE APPEND
+const String server_room_id = "0"; //THE DEFAULT ROOM
 
-
-
-
+const int refresh_time = 300; //IN SECONDS
 DHT dht(DHTPIN, DHTTYPE);
-
+HTTPClient http;  //Declare an object of class HTTPClient
 
 
 void setup() {
@@ -22,8 +23,7 @@ void setup() {
   dht.begin();
 
 
-  WiFi.begin("Winternet is Coming", "Aantarktis<3");   //WiFi 
-//WiFi.begin("FRITZBox7362SL", "6226054527192856");
+  WiFi.begin(<SSID>, <PW>);   //WiFi 
 
   while (WiFi.status() != WL_CONNECTED) {  //Wait for the WiFI connection completion
     delay(500);
@@ -39,7 +39,6 @@ void loop() {
 
 
   float h = dht.readHumidity();
-
   float t = dht.readTemperature();
 
 
@@ -65,10 +64,7 @@ void loop() {
 
 
   if (WiFi.status() == WL_CONNECTED) { //Check WiFi connection status
-
-    HTTPClient http;  //Declare an object of class HTTPClient
-
-    http.begin("http://marcelochsendorf.com/temp_logger/insert_sensor_reading.php?token=1337&temp=" + String(t));  //Specify request destination
+    http.begin(server_base_url +"?token="+server_token+"&temp=" + String(t)+ "&hum=" + String(h) + "&hic=" + String(hic)+ "&room_id=");  //Specify request destination
     int httpCode = http.GET();                                                                  //Send the request
     if (httpCode > 0) { //Check the returning code
       String payload = http.getString();   //Get the request response payload
@@ -76,9 +72,5 @@ void loop() {
     }
     http.end();   //Close connection
   }
-
-  delay(30000);
-
-
-
+  delay(1000*refresh_time);
 }
