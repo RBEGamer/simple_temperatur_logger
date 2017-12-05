@@ -1,0 +1,232 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>TEMPERATURE LOGGER WebUI</title>
+
+
+
+<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="css/small-business.css" rel="stylesheet">
+<script src="./js/Chart.min.js"></script>
+
+</head>
+
+
+<script>
+
+function room_id_changed(){
+  //alert(document.getElementById('room_selection').value);
+  var rid = document.getElementById('room_selection').value;
+
+
+  document.getElementById('dl_btn_div').innerHTML = "<table><tr><td><a href='./exp.php?room_id=" + rid + "' class='btn btn-primary'>SELECTED ROOM</a></td></tr><tr><td><a href='./exp.php?limit=10&room_id=" + rid + "' class='btn btn-primary'>SELECTED ROOM LAST 10</a></td></tr><tr><td><a href='./exp.php?limit=10' class='btn btn-primary'>LAST 10</a></td></tr><tr><td><a href='./exp.php?dump=1' class='btn btn-primary'>DUMP DATABASE</a></td></tr></table>";
+  
+
+                  
+
+
+  
+ 
+  $.get("./gen_temp_table.php?room_id=" + rid, function( data ) {
+    console.log(data);
+    document.getElementById("sel_room_table").innerHTML = data;
+  });
+
+
+  $.get("./get_temp_info.php?room_id=" + rid, function( data ) {
+    var myObj = JSON.parse(data);
+  console.log(myObj);
+    document.getElementById("temp_info_lo").innerHTML = myObj.temp_info.lo;
+    document.getElementById("temp_info_hi").innerHTML = myObj.temp_info.hi;
+    document.getElementById("temp_info_avg").innerHTML = myObj.temp_info.avg;
+  });
+
+  $.get("./gen_chart_data.php?room_id=" + rid, function( data ) {
+    //console.log(data);
+    var myObj = JSON.parse(data);
+  console.log(myObj);
+
+  var lbl = [];
+  var val = [];
+  for (var i = 0; i < myObj.chart.length; i++) {
+  
+    lbl.push(myObj.chart[i].time); //x
+    val.push(myObj.chart[i].temperature);
+  }
+
+  var ctx = document.getElementById("room_temp_line_chart").getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: lbl,
+      datasets: [
+        {
+          label: "TEMP " + rid,
+          borderColor: '#3e95cd',
+          backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
+          data: val
+        }
+      ]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: 'Temperature in Room ' + rid
+      }
+    }
+  });
+  //alert( "Load was performed." );
+  });
+}
+
+function init(default_room_id){
+
+  $.get("./get_rooms.php", function( data ) {
+  document.getElementById("room_sel_div").innerHTML = data;
+  room_id_changed();
+});
+
+
+
+
+
+}
+  </script>
+<body onload="init(0)">
+  
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Temperature Logger</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Main
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+
+  <div class="container">
+    
+          <!-- Heading Row -->
+          <div class="row my-4">
+            <div class="col-lg-8">
+              <canvas id='room_temp_line_chart' width="900px" height="400px"></canvas>
+            </div>
+            <!-- /.col-lg-8 -->
+            <div class="col-lg-4">
+              <h1>SELECT ROOM</h1>
+              <p> <div id="room_sel_div" name="room_sel_div"></div></p>
+              
+            </div>
+            <!-- /.col-md-4 -->
+          </div>
+          <!-- /.row -->
+    
+          <!-- Call to Action Well  -->
+          <div class="card text-white bg-secondary my-4 text-center">
+            <div class="card-body">
+              <p class="text-white m-0"></p>
+            </div>
+          </div>
+    
+          <!-- Content Row -->
+          <div class="row">
+            <div class="col-md-4 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h2 class="card-title">TEMPERATURE HISTORY</h2>
+                  <p class="card-text"><div name="sel_room_table" id="sel_room_table"></div></p>
+                </div>
+                <div class="card-footer">
+                 
+                </div>
+              </div>
+            </div>
+            <!-- /.col-md-4 -->
+            <div class="col-md-4 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h2 class="card-title">DOWNLOAD</h2>
+                  <p class="card-text">Here you can export the temperature data as CSV</p>
+
+                  <div name="dl_btn_div" id="dl_btn_div"></div>
+                 
+                </div>
+                <div class="card-footer">
+                  
+                </div>
+              </div>
+            </div>
+            <!-- /.col-md-4 -->
+            <div class="col-md-4 mb-4">
+              <div class="card h-100">
+                <div class="card-body">
+                  <h2 class="card-title">STATISTICS</h2>
+                  <p class="card-text">
+                    
+                    <table width="100%">
+                      <tr><th>PROP</th><th>VALUE</th></tr>
+
+                      <tr><td>LOWEST</td><td><div id="temp_info_lo"></div></td></tr>
+                      <tr><td>HIGHEST</td><td><div id="temp_info_hi"></div></td></tr>
+                      <tr><td>AVERAGE</td><td><div id="temp_info_avg"></div></td></tr>
+
+                      
+                    </table>
+
+
+
+                  </p>
+                </div>
+                <div class="card-footer">
+                
+                </div>
+              </div>
+            </div>
+            <!-- /.col-md-4 -->
+    
+          </div>
+          <!-- /.row -->
+    
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        <!-- Footer -->
+        <footer class="py-5 bg-dark">
+          <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2017</p>
+          </div>
+          <!-- /.container -->
+        </footer>
+    
+        <!-- Bootstrap core JavaScript -->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+</html>
