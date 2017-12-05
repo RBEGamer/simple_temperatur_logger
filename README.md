@@ -1,8 +1,16 @@
 # simple_temperatur_logger
 a simple temperatur logger
 
+# PARTS
+* ESP8266
+* DHT22 SENSOR
+
+
+# HARDWARE
+Simply connet the sensor to `+3.3V` and `GND` and the data line to pin D2 of the ESP8266.
+
 # WEB UI
-http://marcelochsendorf.com/temp_logger/
+The WebUI is the main interface where all data will be shown.
 
 
 # IMAGES
