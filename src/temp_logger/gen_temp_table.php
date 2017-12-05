@@ -10,12 +10,12 @@ if(isset($_GET['room_id']) && $_GET['room_id'] >= 0){
 
 
 
-echo "<table><tr><th>TIMESTAMP</th><th>Temperature" .$title ."</th><th>DELETE</th></tr>";
+echo "<table width='100%'><tr><th>TIMESTAMP</th><th>TEMP</th><th>HUM</th><th>DELETE</th></tr>";
 
 
 $result = mysqli_query($mysqli,$sql);
 while ($row = mysqli_fetch_assoc($result)) {
-    echo "<tr><td>" .$row["time"] ."</td><td><b>" .$row["temperature"] ." C</b></td><td><form method='GET' action='reset.php'><input type='hidden'name='id' value='".$row["id"]."'/><input type='submit' value='reue='remove'/></form></td></tr>";
+    echo "<tr><td>" .$row["time"] ."</td><td><b>" .$row["temperature"] ." C</b></td><td><b>" . $row["hum"] ." %</b></td><td><form method='GET' action='reset.php'><input type='hidden'name='id' value='".$row["id"]."'/><input type='submit' value='remove'/></form></td></tr>";
 }
 echo "</tbale>";
 ?>

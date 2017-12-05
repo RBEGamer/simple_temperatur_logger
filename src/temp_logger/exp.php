@@ -42,9 +42,9 @@ header("Expires: 0");
 header("Content-Transfer-Encoding: UTF-8");
 
 
-echo "TIMESTAMP;TEMPERATURE;EINHEIT;" .PHP_EOL;
+echo "TIMESTAMP;TEMPERATURE;ROOM_ID;HUM;HIC;" .PHP_EOL;
 while ($row = mysqli_fetch_assoc($result)) {
-    echo "" .$row["time"] .";" .$row["temperature"] .";C;".PHP_EOL;
+    echo "" .$row["time"] .";" .$row["temperature"] .";".$row["room_id"].";".$row["hum"].";".$row["hic"].";".PHP_EOL;
 }
 
 die;

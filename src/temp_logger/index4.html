@@ -1,0 +1,100 @@
+<html>
+<head>
+<link rel="stylesheet" href="./css/bootstrap.min.css">
+<script src="./js/jquery-3.2.1.min.js"></script>
+<script src="./js/tether.min.js"></script>
+<script src="./js/bootstrap.min.js"></script>
+
+<script src="./js/Chart.min.js"></script>
+
+</head>
+
+
+<script>
+
+function room_id_changed(){
+  alert(document.getElementById('room_selection').value);
+  var rid = document.getElementById('room_selection').value;
+
+
+  $.get("./get_rooms.php?room_id=" + rid, function( data ) {
+  $( ".sel_room_table" ).html( data );
+  alert( "Load was performed." );
+  });
+ 
+
+
+  $.get("./get_chart_data.php?room_id=" + rid, function( data ) {
+    var myObj = JSON.parse(data);
+  var ctx = document.getElementById("room_temp_line_chart").getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: myObj
+  });
+  alert( "Load was performed." );
+  });
+}
+
+function init(default_room_id){
+
+  $.get("./get_rooms.php", function( data ) {
+  document.getElementById("room_sel_div").innerHTML = data;
+  alert( "Load was performed." );
+  room_id_changed();
+});
+
+
+}
+  </script>
+<body onload="init(0)">
+
+  <container>
+      <header>
+      <div class="row">
+          <div class="col-1"><img src="./img/noun_52631_cc.png" width="70px" alt="logo"></div>
+          <div class="col-4"><h1>Temp Logger</h1></div>
+          <div class="col-7"></div>
+      </div>  
+    </header>
+  </container>
+  <container>
+    <div class="row">
+        <div class="col-12"><div style="height:50px;" class="span12"></div>
+    </div> 
+  </container>
+
+  <container>
+    <div class="row">
+        <div class="col-3">SELECT ROOM</div>
+        <div class="col-3">
+            <div id="room_sel_div" name="room_sel_div"></div>
+        </div>
+        <div class="col-6"></div>
+    </div> 
+  </container>
+
+<container>
+    <div class="row">
+        <div class="col-6"><div name="sel_room_table" id="sel_room_table"></div>
+        <div class="col-6">
+            INSERT AVARABGE
+        </div>
+    </div> 
+  </container>
+
+  <container>
+    <div class="row">
+        <div class="col-12">
+            <canvas id='room_temp_line_chart'></canvas>
+        </div>
+    </div> 
+  </container>
+
+
+
+
+</container>
+
+
+</body>
+</html>
