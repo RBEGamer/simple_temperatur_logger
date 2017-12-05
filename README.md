@@ -7,10 +7,14 @@ a simple temperatur logger
 
 
 # HARDWARE
-Simply connet the sensor to `+3.3V` and `GND` and the data line to pin D2 of the ESP8266.
+Simply connet the sensor to `+3.3V` and `GND` and the data line to pin `D2` of the ESP8266.
+Flash the arduino sketch to the ESP8266 and change the settings at the top of the document.
 
 # WEB UI
 The WebUI is the main interface where all data will be shown.
+
+# Register a new Room
+To register a new room simply add a new database entry to the `room_names` table
 
 
 # IMAGES
