@@ -8,7 +8,7 @@
 #define DHTTYPE DHT22
 
 const String server_token = "1337";
-const String server_base_url = "http://marcelochsendorf.com/temp_logger/insert_sensor_reading.php"; //PARAMETERS WILL BE APPEND
+const String server_base_url = "<URL>/insert_sensor_reading.php"; //PARAMETERS WILL BE APPEND
 const String server_room_id = "0"; //THE DEFAULT ROOM
 
 const int refresh_time = 300; //IN SECONDS
