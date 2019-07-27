@@ -1,5 +1,5 @@
 # simple_temperatur_logger
-a simple temperatur logger
+<img src="/documentation/logo.png" />
 
 # PARTS
 * ESP8266
