@@ -1,4 +1,3 @@
-# simple_temperatur_logger
 <img src="/documentation/logo.png" />
 
 # PARTS
