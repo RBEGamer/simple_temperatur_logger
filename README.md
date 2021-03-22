@@ -26,8 +26,3 @@ To register a new room simply add a new database entry to the `room_names` table
 
 # FURTHER LINKS
 A AWS and  IOT  tutorial can be found here: http://www.jianshu.com/p/1a25ad823935
-
-
-
-# DONATION
-[![paypal](https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=8D2PEDQ27UJ9Y)
